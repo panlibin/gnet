@@ -115,7 +115,7 @@ func (svr *server) stop() {
 	return
 }
 
-func serve(eventHandler EventHandler, listener *listener, options *Options) (err error) {
+func (s *GServer) serve(eventHandler EventHandler, listener *listener, options *Options) (err error) {
 	// Figure out the correct number of loops/goroutines to use.
 	numEventLoop := 1
 	if options.Multicore {
@@ -144,6 +144,7 @@ func serve(eventHandler EventHandler, listener *listener, options *Options) (err
 		}
 		return options.Codec
 	}()
+	s.s = svr
 
 	server := Server{
 		Multicore:    options.Multicore,
@@ -162,7 +163,12 @@ func serve(eventHandler EventHandler, listener *listener, options *Options) (err
 	svr.startLoops(numEventLoop)
 	// Start listener.
 	svr.startListener()
-	defer svr.stop()
+	// defer svr.stop()
+	s.sdwg.Add(1)
+	go func() {
+		svr.stop()
+		s.sdwg.Done()
+	}()
 
 	return
 }

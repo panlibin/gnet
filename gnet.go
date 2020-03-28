@@ -11,6 +11,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/panjf2000/gnet/internal/netpoll"
@@ -191,6 +192,31 @@ func (es *EventServer) Tick() (delay time.Duration, action Action) {
 	return
 }
 
+type GServer struct {
+	s    *server
+	sdwg sync.WaitGroup
+}
+
+func (s *GServer) SignalShutdown(err error) {
+	if s.s != nil {
+		s.s.signalShutdown(err)
+	}
+}
+
+func (s *GServer) WaitShutdown() {
+	s.sdwg.Wait()
+	s.closeListener(s.s.ln)
+}
+
+func (s *GServer) closeListener(ln *listener) {
+	if ln != nil {
+		ln.close()
+		if ln.network == "unix" {
+			sniffError(os.RemoveAll(ln.addr))
+		}
+	}
+}
+
 // Serve starts handling events for the specified addresses.
 //
 // Addresses should use a scheme prefix and be formatted
@@ -205,14 +231,8 @@ func (es *EventServer) Tick() (delay time.Duration, action Action) {
 //  unix  - Unix Domain Socket
 //
 // The "tcp" network scheme is assumed when one is not specified.
-func Serve(eventHandler EventHandler, addr string, opts ...Option) error {
+func (s *GServer) Serve(eventHandler EventHandler, addr string, opts ...Option) error {
 	var ln listener
-	defer func() {
-		ln.close()
-		if ln.network == "unix" {
-			sniffError(os.RemoveAll(ln.addr))
-		}
-	}()
 
 	options := loadOptions(opts...)
 
@@ -220,6 +240,7 @@ func Serve(eventHandler EventHandler, addr string, opts ...Option) error {
 	if ln.network == "unix" {
 		sniffError(os.RemoveAll(ln.addr))
 		if runtime.GOOS == "windows" {
+			s.closeListener(&ln)
 			return ErrProtocolNotSupported
 		}
 	}
@@ -238,6 +259,7 @@ func Serve(eventHandler EventHandler, addr string, opts ...Option) error {
 		}
 	}
 	if err != nil {
+		s.closeListener(&ln)
 		return err
 	}
 	if ln.pconn != nil {
@@ -246,9 +268,13 @@ func Serve(eventHandler EventHandler, addr string, opts ...Option) error {
 		ln.lnaddr = ln.ln.Addr()
 	}
 	if err := ln.system(); err != nil {
+		s.closeListener(&ln)
 		return err
 	}
-	return serve(eventHandler, &ln, options)
+	if err := s.serve(eventHandler, &ln, options); err != nil {
+		s.closeListener(&ln)
+	}
+	return nil
 }
 
 func parseAddr(addr string) (network, address string) {
@@ -266,4 +292,13 @@ func sniffError(err error) {
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func Serve(eventHandler EventHandler, addr string, opts ...Option) error {
+	s := &GServer{}
+	if err := s.Serve(eventHandler, addr, opts...); err != nil {
+		return err
+	}
+	s.WaitShutdown()
+	return nil
 }

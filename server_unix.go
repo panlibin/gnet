@@ -184,7 +184,7 @@ func (svr *server) stop() {
 	}
 }
 
-func serve(eventHandler EventHandler, listener *listener, options *Options) error {
+func (s *GServer) serve(eventHandler EventHandler, listener *listener, options *Options) error {
 	// Figure out the correct number of loops/goroutines to use.
 	numEventLoop := 1
 	if options.Multicore {
@@ -213,6 +213,7 @@ func serve(eventHandler EventHandler, listener *listener, options *Options) erro
 		}
 		return options.Codec
 	}()
+	s.s = svr
 
 	server := Server{
 		Multicore:    options.Multicore,
@@ -232,7 +233,12 @@ func serve(eventHandler EventHandler, listener *listener, options *Options) erro
 		svr.logger.Printf("gnet server is stoping with error: %v\n", err)
 		return err
 	}
-	defer svr.stop()
+	// defer svr.stop()
+	s.sdwg.Add(1)
+	go func() {
+		svr.stop()
+		s.sdwg.Done()
+	}()
 
 	return nil
 }

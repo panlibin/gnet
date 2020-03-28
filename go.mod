@@ -8,5 +8,5 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/smallnest/goframe v1.0.0
 	github.com/valyala/bytebufferpool v1.0.0
-	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527
+	golang.org/x/sys v0.0.0-20200327173247-9dae0f8f5775
 )

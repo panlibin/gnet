@@ -28,6 +28,6 @@ func (ln *listener) system() error {
 	return nil
 }
 
-func serve(eventHandler EventHandler, listeners []*listener) error {
+func (s *GServer) serve(eventHandler EventHandler, listeners []*listener) error {
 	return errors.New("Unsupported platform in gnet")
 }
