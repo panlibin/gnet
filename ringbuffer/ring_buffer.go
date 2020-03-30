@@ -286,10 +286,6 @@ func (r *RingBuffer) WriteString(s string) (n int, err error) {
 func (r *RingBuffer) ByteBuffer() *bytebuffer.ByteBuffer {
 	if r.isEmpty {
 		return nil
-	} else if r.w == r.r {
-		bb := bytebuffer.Get()
-		_, _ = bb.Write(r.buf)
-		return bb
 	}
 
 	bb := bytebuffer.Get()
@@ -311,11 +307,6 @@ func (r *RingBuffer) ByteBuffer() *bytebuffer.ByteBuffer {
 func (r *RingBuffer) WithByteBuffer(b []byte) *bytebuffer.ByteBuffer {
 	if r.isEmpty {
 		return &bytebuffer.ByteBuffer{B: b}
-	} else if r.w == r.r {
-		bb := bytebuffer.Get()
-		_, _ = bb.Write(r.buf)
-		_, _ = bb.Write(b)
-		return bb
 	}
 
 	bb := bytebuffer.Get()
