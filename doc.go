@@ -18,7 +18,7 @@ Echo server built upon gnet is shown below:
 	import (
 		"log"
 
-		"github.com/panjf2000/gnet"
+		"github.com/panlibin/gnet"
 	)
 
 	type echoServer struct {

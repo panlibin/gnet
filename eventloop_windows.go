@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/panjf2000/gnet/pool/bytebuffer"
+	"github.com/panlibin/gnet/pool/bytebuffer"
 )
 
 type eventloop struct {

@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/panjf2000/gnet"
-	"github.com/panjf2000/gnet/pool/goroutine"
+	"github.com/panlibin/gnet"
+	"github.com/panlibin/gnet/pool/goroutine"
 )
 
 type codecServer struct {

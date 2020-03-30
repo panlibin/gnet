@@ -10,8 +10,8 @@ import (
 	"errors"
 	"unsafe"
 
-	"github.com/panjf2000/gnet/internal"
-	"github.com/panjf2000/gnet/pool/bytebuffer"
+	"github.com/panlibin/gnet/internal"
+	"github.com/panlibin/gnet/pool/bytebuffer"
 )
 
 // ErrIsEmpty will be returned when trying to read a empty ring-buffer.

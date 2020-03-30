@@ -10,10 +10,10 @@ package gnet
 import (
 	"net"
 
-	"github.com/panjf2000/gnet/internal/netpoll"
-	"github.com/panjf2000/gnet/pool/bytebuffer"
-	prb "github.com/panjf2000/gnet/pool/ringbuffer"
-	"github.com/panjf2000/gnet/ringbuffer"
+	"github.com/panlibin/gnet/internal/netpoll"
+	"github.com/panlibin/gnet/pool/bytebuffer"
+	prb "github.com/panlibin/gnet/pool/ringbuffer"
+	"github.com/panlibin/gnet/ringbuffer"
 	"golang.org/x/sys/unix"
 )
 

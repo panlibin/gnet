@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/panjf2000/gnet/internal/netpoll"
+	"github.com/panlibin/gnet/internal/netpoll"
 )
 
 // Action is an action that occurs after the completion of an event.

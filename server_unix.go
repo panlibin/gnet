@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/panjf2000/gnet/internal/netpoll"
+	"github.com/panlibin/gnet/internal/netpoll"
 )
 
 type server struct {

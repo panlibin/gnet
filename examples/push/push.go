@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/panjf2000/gnet"
+	"github.com/panlibin/gnet"
 )
 
 type pushServer struct {

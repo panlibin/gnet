@@ -6,7 +6,7 @@
 
 package gnet
 
-import "github.com/panjf2000/gnet/internal/netpoll"
+import "github.com/panlibin/gnet/internal/netpoll"
 
 func (el *eventloop) handleEvent(fd int, filter int16) error {
 	if c, ok := el.connections[fd]; ok {

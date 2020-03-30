@@ -10,7 +10,7 @@ package gnet
 import (
 	"time"
 
-	"github.com/panjf2000/gnet/pool/bytebuffer"
+	"github.com/panlibin/gnet/pool/bytebuffer"
 )
 
 func (svr *server) listenerRun() {
