@@ -51,7 +51,7 @@ func (svr *server) waitForShutdown() error {
 }
 
 // signalShutdown signals a shutdown an begins server closing.
-func (svr *server) signalShutdown(err error) {
+func (svr *server) signalShutdown() {
 	svr.once.Do(func() {
 		svr.cond.L.Lock()
 		svr.serr = err
