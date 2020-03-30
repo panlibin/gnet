@@ -197,9 +197,9 @@ type GServer struct {
 	sdwg sync.WaitGroup
 }
 
-func (s *GServer) SignalShutdown(err error) {
+func (s *GServer) SignalShutdown() {
 	if s.s != nil {
-		s.s.signalShutdown(err)
+		s.s.signalShutdown()
 	}
 }
 

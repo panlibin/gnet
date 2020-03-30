@@ -15,7 +15,7 @@ import (
 
 func (svr *server) listenerRun() {
 	var err error
-	defer func() { svr.signalShutdown(err) }()
+	defer func() { svr.signalShutdown() }()
 	var packet [0x10000]byte
 	for {
 		if svr.ln.pconn != nil {
